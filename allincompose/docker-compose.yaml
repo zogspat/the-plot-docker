@@ -33,8 +33,9 @@ services:
        PRODUCTION: ${PRODUCTION}
    mail:
      image: tvial/docker-mailserver
-     hostname: ${HOSTNAME}
+     hostname: mail
      container_name: mail
+     domainname: ${HOSTNAME}
      #restart: always
      ports:
        - "25:25"
