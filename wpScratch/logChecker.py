@@ -58,7 +58,7 @@ def emailHitMax(top5Login, maxHits, jsonFromGeoip, blockedMax, worstOffendingIP)
                 body = body + "\nBlock threshold exceeded so " + (worstOffendingIP.encode("utf-8")) + " has been blocked"
         msg.attach(MIMEText(body, 'plain'))
 
-        server = smtplib.SMTP('the-plot.com', 25)
+        server = smtplib.SMTP('mail', 25)
         server.starttls()
         server.login("donal", "*** actual password needs to go here ***")
 
