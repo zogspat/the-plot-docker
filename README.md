@@ -19,4 +19,5 @@ EABHMACKEY=
 6. Replace the hostnames in ~/allInOneCompose/init-letsencrypt.sh (2) and ~/allInOneCompose/data/nginx/app.conf (5)
 7. Run ./init-letsencrypt.sh
 8. Kill the Nginx container (not essential)
-9. In /allInOneCompose, docker-compose up -d
+9. Note the install paths for mail server volumes
+10. In ~/allInOneCompose, docker-compose up -d
