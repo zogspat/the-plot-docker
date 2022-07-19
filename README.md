@@ -1,6 +1,6 @@
 # the-plot-docker
 
-Backup of a blog based on a customised WordPress container. 
+Backup of a blog based on a customised WordPress container. (This is tailored to the point of not being of general interest.)
 
 ## Setup Steps:
 1. Use the All-In-One Migration tool to export content. Note:
