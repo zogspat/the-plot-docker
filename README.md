@@ -5,12 +5,12 @@ Backup of a blog based on a customised WordPress container. (This is tailored to
 ## Setup Steps:
 1. Use the All-In-One Migration tool to export content. Note:
 2. Create a .env file in the allInOneCompose directory with the following values:
-DBNAME=
-MYSQL_ROOT_PASSWORD=
-MYSQL_PASSWORD=
-HOSTNAME=
-PRODUCTION=
-EABKID=
+DBNAME=  
+MYSQL_ROOT_PASSWORD=  
+MYSQL_PASSWORD=  
+HOSTNAME=  
+PRODUCTION=  
+EABKID=  
 EABHMACKEY=
 
 3. Only the first three are needed but cp ~/allInOneCompose/.env ~/wpScratch/build.args
