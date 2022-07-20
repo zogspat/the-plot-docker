@@ -1,69 +1,92 @@
 version: '3.3'
 
 services:
-   db:
-     image: mysql:5.7
-     container_name: mysql
-     volumes:
-       - db_data:/var/lib/mysql
-     #ports:
-     #  - "3306:3306"
-     restart: always
-     environment:
-       MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
-       MYSQL_DATABASE: wordpress
-       MYSQL_USER: wordpress
-       MYSQL_PASSWORD: ${MYSQL_PASSWORD}
 
-   wordpress:
-     image: zogspat/wpscratch:0.32
-     container_name: wordpress
-     hostname: ${HOSTNAME}
-     depends_on:
-       - db
-     volumes:
-       - web_data:/var/www/html
-       - cert_data:/root/.acme.sh/${HOSTNAME}
-     ports:
-       - "80:80"
-       - "443:443"
-     restart: always
-     environment:
-       WORDPRESS_DB_HOST: db:3306
-       PRODUCTION: ${PRODUCTION}
-   mail:
-     image: tvial/docker-mailserver
-     hostname: mail
-     container_name: mail
-     domainname: ${HOSTNAME}
-     #restart: always
-     ports:
-       - "25:25"
-       - "143:143"
-       - "587:587"
-       - "993:993"
-     volumes:
-       - maildata:/var/mail
-       - mailstate:/var/mail-state
-       - cert_data:/root/.acme.sh/${HOSTNAME}
-       - ./config/:/tmp/docker-mailserver/
-     environment:
-       - ENABLE_SPAMASSASSIN=1
-       - ENABLE_CLAMAV=0
-       - ENABLE_FAIL2BAN=1
-       - ENABLE_POSTGREY=1
-       - ONE_DIR=1
-       - DMS_DEBUG=0
-       - SSL_TYPE=manual
-       - SSL_CERT_PATH=/root/.acme.sh/${HOSTNAME}/${HOSTNAME}.cer
-       - SSL_KEY_PATH=/root/.acme.sh/${HOSTNAME}/${HOSTNAME}.key
-     cap_add:
-       - NET_ADMIN
+  wordpress:
+    image: zogspat/wpscratch:1.6.8
+    container_name: wordpress
+    hostname: ${HOSTNAME}
+    depends_on:
+      - db
+    volumes:
+      - web_data:/var/www/html
+    ports:
+      - "8080:80"
+    restart: always
+    environment:
+      WORDPRESS_DB_HOST: db:3306
+      PRODUCTION: ${PRODUCTION}
+      EABKID: ${EABKID}
+      EABHMACKEY: ${EABHMACKEY}
+  db:
+    image: mysql:5.7
+    container_name: mysql
+    volumes:
+      - db_data:/var/lib/mysql
+    #ports:
+    #  - "3306:3306"
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_DATABASE: wordpress
+      MYSQL_USER: wordpress
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+
+  mail:
+    image: mailserver/docker-mailserver
+    hostname: mail
+    container_name: mail
+    domainname: ${HOSTNAME}
+    #restart: always
+    ports:
+      - "25:25"
+      - "143:143"
+      - "587:587"
+      - "465:465"
+    volumes:
+      - maildata:/var/mail
+      - mailstate:/var/mail-state
+      - /home/ubuntu/allInOneCompose/data/certbot/conf/live/${HOSTNAME}/:/home/ubuntu/allInOneCompose/data/certbot/conf/live/${HOSTNAME}/
+      # needed because the certs are symlinked:
+      - /home/ubuntu/allInOneCompose/data/certbot/conf/archive/${HOSTNAME}/:/home/ubuntu/allInOneCompose/data/certbot/conf/archive/${HOSTNAME}/
+      - /home/ubuntu/mailserver/docker-data/dms/config/:/tmp/docker-mailserver/
+    environment:
+      - ENABLE_FAIL2BAN=0
+      - ENABLE_POSTGREY=0
+      - ENABLE_SPAMASSASSIN=0
+      - ONE_DIR=1
+      - ENABLE_DKIM=1
+      - DMS_DEBUG=1
+      - SSL_TYPE=manual
+      - SSL_CERT_PATH=/home/ubuntu/allInOneCompose/data/certbot/conf/live/${HOSTNAME}/fullchain.pem
+      - SSL_KEY_PATH=/home/ubuntu/allInOneCompose/data/certbot/conf/live/${HOSTNAME}/privkey.pem
+    cap_add:
+      - NET_ADMIN
+      - SYS_PTRACE
+
+  nginx:
+    image: nginx:1.15-alpine
+    restart: unless-stopped
+    volumes:
+      - ./data/nginx:/etc/nginx/conf.d
+      - ./data/certbot/conf:/etc/letsencrypt
+      - ./data/certbot/www:/var/www/certbot
+    ports:
+      - "80:80"
+      - "443:443"
+    command: "/bin/sh -c 'while :; do sleep 6h & wait $${!}; nginx -s reload; done & nginx -g \"daemon off;\"'"
+    
+  certbot:
+    image: certbot/certbot
+    restart: unless-stopped
+    volumes:
+      - ./data/certbot/conf:/etc/letsencrypt
+      - ./data/certbot/www:/var/www/certbot
+    entrypoint: "/bin/sh -c 'trap exit TERM; while :; do certbot renew; sleep 72h & wait $${!}; done;'"
 
 volumes:
     db_data: {}
     web_data: {}
-    cert_data: {}
     maildata:
       driver: local
     mailstate:
