@@ -27,13 +27,13 @@ $_SERVER['HTTP_HOST'] = $_SERVER['HTTP_X_FORWARDED_HOST'];
 
 // ** MySQL settings - You can get this info from your web host ** //
 /** The name of the database for WordPress */
-define( 'DB_NAME', '${DBNAME}' );
+define( 'DB_NAME', '$DBNAME' );
 
 /** MySQL database username - deliberate reuse */
-define( 'DB_USER', '${DBNAME}' );
+define( 'DB_USER', '$DBNAME' );
 
 /** MySQL database password */
-define( 'DB_PASSWORD', '${MYSQL_PASSWORD}' );
+define( 'DB_PASSWORD', '$MYSQL_PASSWORD' );
 
 /** MySQL hostname */
 define( 'DB_HOST', 'mysql' );
