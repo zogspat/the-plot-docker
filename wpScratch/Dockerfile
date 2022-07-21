@@ -23,6 +23,7 @@ RUN apt-get install -y dnsutils
 RUN apt-get install -y php
 RUN apt-get install -y php-mysql
 RUN apt-get install -y wget
+RUN apt-get install -y nano
 
 # change the php upload limit for php (for backup upload)
 COPY changeUploadLimit.sh /tmp/changeUploadLimit.sh
@@ -40,7 +41,9 @@ RUN apt-get install -y gettext
 COPY wp-config.php /tmp/wp-config_in
 # this whole approach is starting to look like less of a good idea: https://stackoverflow.com/questions/33548530/envsubst-command-getting-stuck-in-a-container
 COPY enVars.txt /tmp/enVars.txt
-RUN source /tmp/enVars.txt && envsubst < /tmp/wp-config_in > /tmp/wp-config_out
+RUN source /tmp/enVars.txt && envsubst '$DBNAME, $MYSQL_ROOT_PASSWORD, $MYSQL_PASSWORD' < /tmp/wp-config_in > /tmp/wp-config_out
+
+RUN cp /tmp/wp-config_out /var/www/html/blog/wp-config.php
 
 # test:
 # COPY testfileEnvSub.txt /tmp/testfileEnvSub.txt
@@ -54,4 +57,3 @@ RUN source /tmp/enVars.txt && envsubst < /tmp/wp-config_in > /tmp/wp-config_out
 #RUN sudo /etc/init.d/mysql start; sudo mysql -u root -p rootpasswd < /tmp/setup.sql
 COPY entrypoint.sh /tmp/entrypoint.sh
 ENTRYPOINT ["/bin/bash", "/tmp/entrypoint.sh"]
-
