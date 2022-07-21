@@ -3,7 +3,7 @@ version: '3.3'
 services:
 
   wordpress:
-    image: zogspat/wpscratch:1.6.8
+    image: zogspat/wpscratch:1.7.3
     container_name: wordpress
     hostname: ${HOSTNAME}
     depends_on:
@@ -11,13 +11,16 @@ services:
     volumes:
       - web_data:/var/www/html
     ports:
-      - "8080:80"
+      - 80
     restart: always
     environment:
       WORDPRESS_DB_HOST: db:3306
       PRODUCTION: ${PRODUCTION}
       EABKID: ${EABKID}
       EABHMACKEY: ${EABHMACKEY}
+    networks:
+      - backchannel
+
   db:
     image: mysql:5.7
     container_name: mysql
@@ -31,6 +34,8 @@ services:
       MYSQL_DATABASE: wordpress
       MYSQL_USER: wordpress
       MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+    networks:
+      - backchannel
 
   mail:
     image: mailserver/docker-mailserver
@@ -46,10 +51,10 @@ services:
     volumes:
       - maildata:/var/mail
       - mailstate:/var/mail-state
-      - /home/ubuntu/allInOneCompose/data/certbot/conf/live/${HOSTNAME}/:/home/ubuntu/allInOneCompose/data/certbot/conf/live/${HOSTNAME}/
+      - /home/ubuntu/the-plot-docker/allInOneCompose/data/certbot/conf/live/${HOSTNAME}/:/home/ubuntu/the-plot-docker/allInOneCompose/data/certbot/conf/live/${HOSTNAME}/
       # needed because the certs are symlinked:
-      - /home/ubuntu/allInOneCompose/data/certbot/conf/archive/${HOSTNAME}/:/home/ubuntu/allInOneCompose/data/certbot/conf/archive/${HOSTNAME}/
-      - /home/ubuntu/mailserver/docker-data/dms/config/:/tmp/docker-mailserver/
+      - /home/ubuntu/the-plot-docker/allInOneCompose/data/certbot/conf/archive/${HOSTNAME}/:/home/ubuntu/the-plot-docker/allInOneCompose/data/certbot/conf/archive/${HOSTNAME}/
+      - /home/ubuntu/the-plot-docker/mailserver/docker-data/dms/config/:/tmp/docker-mailserver/
     environment:
       - ENABLE_FAIL2BAN=0
       - ENABLE_POSTGREY=0
@@ -58,13 +63,17 @@ services:
       - ENABLE_DKIM=1
       - DMS_DEBUG=1
       - SSL_TYPE=manual
-      - SSL_CERT_PATH=/home/ubuntu/allInOneCompose/data/certbot/conf/live/${HOSTNAME}/fullchain.pem
-      - SSL_KEY_PATH=/home/ubuntu/allInOneCompose/data/certbot/conf/live/${HOSTNAME}/privkey.pem
+      - SSL_CERT_PATH=/home/ubuntu/the-plot-docker/allInOneCompose/data/certbot/conf/live/${HOSTNAME}/fullchain.pem
+      - SSL_KEY_PATH=/home/ubuntu/the-plot-docker/allInOneCompose/data/certbot/conf/live/${HOSTNAME}/privkey.pem
     cap_add:
       - NET_ADMIN
       - SYS_PTRACE
+    networks:
+      - outside
 
   nginx:
+    depends_on:
+      - wordpress
     image: nginx:1.15-alpine
     restart: unless-stopped
     volumes:
@@ -75,7 +84,10 @@ services:
       - "80:80"
       - "443:443"
     command: "/bin/sh -c 'while :; do sleep 6h & wait $${!}; nginx -s reload; done & nginx -g \"daemon off;\"'"
-    
+    networks:
+      - backchannel
+      - outside
+
   certbot:
     image: certbot/certbot
     restart: unless-stopped
@@ -83,6 +95,8 @@ services:
       - ./data/certbot/conf:/etc/letsencrypt
       - ./data/certbot/www:/var/www/certbot
     entrypoint: "/bin/sh -c 'trap exit TERM; while :; do certbot renew; sleep 72h & wait $${!}; done;'"
+    networks:
+      - outside
 
 volumes:
     db_data: {}
@@ -91,3 +105,10 @@ volumes:
       driver: local
     mailstate:
       driver: local
+
+networks:
+    backchannel:
+      internal: true
+
+    outside:
+      internal: false
