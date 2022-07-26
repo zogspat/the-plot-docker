@@ -20,6 +20,8 @@ services:
       EABHMACKEY: ${EABHMACKEY}
     networks:
       - backchannel
+      # needs the external network for the wp client to pull down themes, plugins etc.
+      - outside
 
   db:
     image: mysql:5.7
