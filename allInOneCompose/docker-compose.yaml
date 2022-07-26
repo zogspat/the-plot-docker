@@ -3,7 +3,7 @@ version: '3.3'
 services:
 
   wordpress:
-    image: zogspat/wpscratch:1.7.3
+    image: zogspat/wpscratch:1.8.4
     container_name: wordpress
     hostname: ${HOSTNAME}
     depends_on:
@@ -20,9 +20,9 @@ services:
       EABHMACKEY: ${EABHMACKEY}
     networks:
       - backchannel
-      # needs the external network for the wp client to pull down themes, plugins etc.
+      # the external network is necessary for the wp web client to be able to connect to download
+      # plugins etc.
       - outside
-
   db:
     image: mysql:5.7
     container_name: mysql
@@ -96,7 +96,7 @@ services:
     volumes:
       - ./data/certbot/conf:/etc/letsencrypt
       - ./data/certbot/www:/var/www/certbot
-    entrypoint: "/bin/sh -c 'trap exit TERM; while :; do certbot renew; sleep 72h & wait $${!}; done;'"
+    entrypoint: "/bin/sh -c 'trap exit TERM; while :; do certbot renew; sleep 12h & wait $${!}; done;'"
     networks:
       - outside
 
