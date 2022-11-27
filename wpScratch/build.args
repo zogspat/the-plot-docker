@@ -1,0 +1,7 @@
+export DBNAME=wordpress
+export MYSQL_ROOT_PASSWORD=
+export MYSQL_PASSWORD=
+export HOSTNAME=
+export PRODUCTION=true
+export EABKID=
+export EABHMACKEY=
