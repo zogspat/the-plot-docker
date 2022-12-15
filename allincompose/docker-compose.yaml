@@ -46,9 +46,9 @@ services:
     volumes:
       - maildata:/var/mail
       - mailstate:/var/mail-state
-      - /home/ubuntu/allInOneCompose/data/certbot/conf/live/${HOSTNAME}/:/home/ubuntu/allInOneCompose/data/certbot/conf/live/${HOSTNAME}/
+      - /home/ubuntu/the-plot-docker/allinonecompose/data/certbot/conf/live/${HOSTNAME}/:/home/ubuntu/the-plot-docker/allinonecompose/certbot/conf/live/${HOSTNAME}/
       # needed because the certs are symlinked:
-      - /home/ubuntu/allInOneCompose/data/certbot/conf/archive/${HOSTNAME}/:/home/ubuntu/allInOneCompose/data/certbot/conf/archive/${HOSTNAME}/
+      - /home/ubuntu/the-plot-docker/allinonecompose/data/certbot/conf/archive/${HOSTNAME}/:/home/ubuntu/the-plot-docker/allinonecompose/data/certbot/conf/archive/${HOSTNAME}/
       - /home/ubuntu/mailserver/docker-data/dms/config/:/tmp/docker-mailserver/
     environment:
       - ENABLE_FAIL2BAN=0
