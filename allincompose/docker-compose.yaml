@@ -46,9 +46,9 @@ services:
     volumes:
       - maildata:/var/mail
       - mailstate:/var/mail-state
-      - /home/ubuntu/the-plot-docker/allinonecompose/data/certbot/conf/live/${HOSTNAME}/:/home/ubuntu/the-plot-docker/allinonecompose/certbot/conf/live/${HOSTNAME}/
+      - /home/ubuntu/the-plot-docker/allincompose/data/certbot/conf/live/${HOSTNAME}/:/home/ubuntu/the-plot-docker/allincompose/certbot/conf/live/${HOSTNAME}/
       # needed because the certs are symlinked:
-      - /home/ubuntu/the-plot-docker/allinonecompose/data/certbot/conf/archive/${HOSTNAME}/:/home/ubuntu/the-plot-docker/allinonecompose/data/certbot/conf/archive/${HOSTNAME}/
+      - /home/ubuntu/the-plot-docker/allincompose/data/certbot/conf/archive/${HOSTNAME}/:/home/ubuntu/the-plot-docker/allincompose/data/certbot/conf/archive/${HOSTNAME}/
       - /home/ubuntu/mailserver/docker-data/dms/config/:/tmp/docker-mailserver/
     environment:
       - ENABLE_FAIL2BAN=0
@@ -58,8 +58,8 @@ services:
       - ENABLE_DKIM=1
       - DMS_DEBUG=1
       - SSL_TYPE=manual
-      - SSL_CERT_PATH=/home/ubuntu/allInOneCompose/data/certbot/conf/live/${HOSTNAME}/fullchain.pem
-      - SSL_KEY_PATH=/home/ubuntu/allInOneCompose/data/certbot/conf/live/${HOSTNAME}/privkey.pem
+      - SSL_CERT_PATH=/home/ubuntu/the-plot-docker/allincompose/data/certbot/conf/live/${HOSTNAME}/fullchain.pem
+      - SSL_KEY_PATH=/home/ubuntu/the-plot-docker/allincompose/data/certbot/conf/live/${HOSTNAME}/privkey.pem
     cap_add:
       - NET_ADMIN
       - SYS_PTRACE
