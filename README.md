@@ -20,7 +20,7 @@ EABHMACKEY=
 6. docker build -t zogspat/wpscratch:version $(for i in `cat build.args`; do out+="--build-arg $i " ; done; echo $out;out="") .
 7. (When it's working, docker push zogspat/wpscratch:version)
 8. Make sure the build version matches the image version for wordpress in ~/the-plot-docker/allincompose/docker-compose.yaml
-9. Replace the hostnames in ~/allInOneCompose/init-letsencrypt.sh (2 instances) and ~/the-plot-docker/allInOneCompose/data/nginx/app.conf (5)
+9. Replace the hostnames in ~/allInOneCompose/init-letsencrypt.sh (2 instances) and ~/the-plot-docker/allInOneCompose/data/nginx/app.conf (7 instances).
 10. Run ~/the-plot-docker/allInOneCompose/init-letsencrypt.sh . Note: toggle Staging value for testing purposes.
 11. Kill the Nginx container (not essential)
 12. Mailserver needs at least one account: in ~/mailserver run setup.sh email add account@domain.com password
