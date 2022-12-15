@@ -14,14 +14,14 @@ PRODUCTION=
 EABKID=  
 EABHMACKEY=
 
-3. Only the first three are needed but cp ~/allInOneCompose/.env ~/wpScratch/build.args
+3. Only the first three are needed but cp ~/the-plot-docker/allInOneCompose/.env ~/the-plot-docker/wpScratch/build.args
 4. If neededed (current working version 1.6.1 in dockerhub) is In the wpScratch directory: 
-5. 
+5. For test purposes, touch galleries.tar.gz in the wp-scratch directory.
 6. docker build -t zogspat/wpscratch:version $(for i in `cat build.args`; do out+="--build-arg $i " ; done; echo $out;out="") .
-7. 
-8. docker push zogspat/wpscratch:version
-9. Replace the hostnames in ~/allInOneCompose/init-letsencrypt.sh (2) and ~/allInOneCompose/data/nginx/app.conf (5)
-10. Run ./init-letsencrypt.sh . Note: toggle Staging value for testing purposes.
+7. (When it's working, docker push zogspat/wpscratch:version)
+8. Make sure the build version matches the image version for wordpress in ~/the-plot-docker/allincompose/docker-compose.yaml
+9. Replace the hostnames in ~/allInOneCompose/init-letsencrypt.sh (2 instances) and ~/the-plot-docker/allInOneCompose/data/nginx/app.conf (5)
+10. Run ~/the-plot-docker/allInOneCompose/init-letsencrypt.sh . Note: toggle Staging value for testing purposes.
 11. Kill the Nginx container (not essential)
 12. Mailserver needs at least one account: in ~/mailserver run setup.sh email add account@domain.com password
 13. Note the install paths for mail server volumes (see also below)
