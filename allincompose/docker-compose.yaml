@@ -28,8 +28,8 @@ services:
     restart: always
     environment:
       MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
-      MYSQL_DATABASE: wordpress
-      MYSQL_USER: wordpress
+      MYSQL_DATABASE: ${DBNAME}
+      MYSQL_USER: ${DBNAME}
       MYSQL_PASSWORD: ${MYSQL_PASSWORD}
 
   mail:
