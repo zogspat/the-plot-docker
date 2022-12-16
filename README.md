@@ -23,7 +23,7 @@ PRODUCTION=
 EABKID=  
 EABHMACKEY=
 
-3. Only the first three are needed but cp ~/the-plot-docker/allInOneCompose/.env ~/the-plot-docker/wpScratch/build.args
+3. Only the first three are needed but copy the same values to  ~/allinonecompose/the-plot-docker/wpScratch/build.args
 4. If neededed (current working version 1.6.1 in dockerhub) is In the wpScratch directory: 
 5. For test purposes, touch galleries.tar.gz in the wp-scratch directory.
 6. docker build -t zogspat/wpscratch:version $(for i in `cat build.args`; do out+="--build-arg $i " ; done; echo $out;out="") .
