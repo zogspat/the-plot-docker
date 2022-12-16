@@ -41,7 +41,7 @@ RUN apt-get install -y gettext
 COPY wp-config.php /tmp/wp-config_in
 # this whole approach is starting to look like less of a good idea: https://stackoverflow.com/questions/33548530/envsubst-command-getting-stuck-in-a-container
 COPY build.args /tmp/enVars.txt
-RUN source /tmp/enVars.txt && envsubst '$DBNAME, $MYSQL_ROOT_PASSWORD, $MYSQL_PASSWORD' < /tmp/wp-config_in > /tmp/wp-config_out
+RUN . /tmp/enVars.txt && envsubst '$DBNAME, $MYSQL_ROOT_PASSWORD, $MYSQL_PASSWORD' < /tmp/wp-config_in > /tmp/wp-config_out
 
 RUN ["cp", "/tmp/wp-config_out", "/var/www/html/blog/wp-config.php"]
 RUN ["cp", "/tmp/wp-config_out", "/var/www/html/blog/trying"]
