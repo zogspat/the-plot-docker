@@ -5,8 +5,9 @@ Backup of a blog based on a customised WordPress container. (This is tailored to
 # New VM Setup 
 1. sudo snap install docker
 2. sudo apt-get install net-tools
-3. for non-root docker (ubuntu + snap assumed), sudo gpasswd -a $USER docker
+3. for non-root docker (ubuntu + snap assumed),sudo groupadd docker, then: sudo gpasswd -a $USER docker
 4. sudo snap disable, then enable docker
+5. restart shell
 
 # DNS
 For testing, make sure that there's an A record for the www name variant.
