@@ -3,7 +3,7 @@ version: '3.3'
 services:
 
   wordpress:
-    image: zogspat/wpscratch:1.6.8
+    image: zogspat/cleanslate:0.9
     container_name: wordpress
     hostname: ${HOSTNAME}
     depends_on:
@@ -46,7 +46,7 @@ services:
     volumes:
       - maildata:/var/mail
       - mailstate:/var/mail-state
-      - /home/ubuntu/the-plot-docker/allincompose/data/certbot/conf/live/${HOSTNAME}/:/home/ubuntu/the-plot-docker/allincompose/certbot/conf/live/${HOSTNAME}/
+      - /home/ubuntu/the-plot-docker/allincompose/data/certbot/conf/live/${HOSTNAME}/:/home/ubuntu/the-plot-docker/allincompose/data/certbot/conf/live/${HOSTNAME}/
       # needed because the certs are symlinked:
       - /home/ubuntu/the-plot-docker/allincompose/data/certbot/conf/archive/${HOSTNAME}/:/home/ubuntu/the-plot-docker/allincompose/data/certbot/conf/archive/${HOSTNAME}/
       - /home/ubuntu/mailserver/docker-data/dms/config/:/tmp/docker-mailserver/
@@ -75,7 +75,7 @@ services:
       - "80:80"
       - "443:443"
     command: "/bin/sh -c 'while :; do sleep 6h & wait $${!}; nginx -s reload; done & nginx -g \"daemon off;\"'"
-    
+
   certbot:
     image: certbot/certbot
     restart: unless-stopped
