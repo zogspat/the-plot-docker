@@ -41,21 +41,10 @@ RUN apt-get install -y gettext
 COPY wp-config.php /tmp/wp-config_in
 # this whole approach is starting to look like less of a good idea: https://stackoverflow.com/questions/33548530/envsubst-command-getting-stuck-in-a-container
 COPY build.args /tmp/enVars.txt
-RUN . /tmp/enVars.txt && envsubst '$DBNAME, $MYSQL_ROOT_PASSWORD, $MYSQL_PASSWORD' < /tmp/wp-config_in > /tmp/wp-config_out
 
-RUN ["cp", "/tmp/wp-config_out", "/var/www/html/blog/wp-config.php"]
-RUN ["cp", "/tmp/wp-config_out", "/var/www/html/blog/trying"]
-RUN ["cp", "/tmp/wp-config_out", "/tmp/moretries"]
-
-
-# test:
-# COPY testfileEnvSub.txt /tmp/testfileEnvSub.txt
-# RUN envsubst < /tmp/testfileEnvSub.txt > /tmp/testsubout.txt
-# COPY debugHeaders.php /var/www/html/blog/debugHeaders.php
-# RUN a2enmod log_forensic
-
-#RUN cd /var/www/html; gunzip galleries.tar.gz; tar -xf galleries.tar
-
+# It's possible that the RUN command to unzip the Wordpress install and the mv into the blog directory may not have completed.
+RUN . /tmp/enVars.txt && envsubst '$DBNAME, $MYSQL_ROOT_PASSWORD, $MYSQL_PASSWORD' < /tmp/wp-config_in > /var/www/html/blog/wp-config.php
+# ... so this may need to change to outputting to /tmp, and then copying the file on startup.
 
 #RUN sudo /etc/init.d/mysql start; sudo mysql -u root -p rootpasswd < /tmp/setup.sql
 COPY entrypoint.sh /tmp/entrypoint.sh
