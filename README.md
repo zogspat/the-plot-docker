@@ -38,5 +38,13 @@ EABHMACKEY=
 14. Copy the static gallery file into the ~/allInOneCompose directory; uncomment the COPY command in the docker compose file.
 15. In ~/allInOneCompose, docker-compose up -d
 
+#Post install tidy-up
+If the change to the DNS is done after starting Wordpress, the reference to images will not be updated. On the MySql container, run
+ ./mysql -u root -p'whatever the route password is'
+ use wordpress;
+ UPDATE wp_posts SET post_content=(REPLACE (post_content,'oldname.com','the-plot.com'));
+ 
+ Correct the typo in the header.php, which refers to http:// rather than https:// for the thumbnail.
+
 ## Notes on test vs production certs
 The naming conventions for test vs prod certs is handled very differently. Prod uses symlinks to point to files that always have the same name (privkey.pem etc), and are in an 'archive' directory. Testing creates files only in the live directory, and which start withthe sitename (TBC). This makes it messy to refer to them in the mailserver configuration.
